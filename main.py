@@ -17,4 +17,3 @@ while True:
 
 window.close()
 
-
