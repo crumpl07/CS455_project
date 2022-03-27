@@ -1,6 +1,7 @@
 # I lov emy girlfiredn vivian
 
 import torch
+import torch.cuda
 from torch.utils.data import DataLoader
 from torchvision.datasets import ImageFolder
 import torchvision.transforms as T
@@ -23,13 +24,14 @@ def show_batch(dl, nmax=64):
         break
 
 project_name = 'CS455_PROJECT'
-DATA_DIR = 'afhq/'
+DATA_DIR = '../afhq/'
 
 image_size = 64
 batch_size = 128
 stats = (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)
 
 print(os.listdir(DATA_DIR)[:10])
+print(torch.cuda.is_available())
 
 # print(DATA_DIR)
 
@@ -106,7 +108,7 @@ discriminator = nn.Sequential(
     # out: 1 x 1 x 1
 
     nn.Flatten(),
-    nn.Sigmoid())
+    nn.Sigmoid()).to(device)
 
 latent_size = 128
 
@@ -148,6 +150,7 @@ generator = to_device(generator, device)
 def train_discriminator(real_images, opt_d):
     # Clear discriminator gradients
     opt_d.zero_grad()
+
 
     # Pass real images through discriminator
     real_preds = discriminator(real_images)
@@ -251,7 +254,7 @@ def fit(epochs, lr, start_idx=1):
 
 
 lr = 0.0002
-epochs = 25
+epochs = 50
 
 
 history = fit(epochs, lr)
